@@ -1,6 +1,6 @@
 import e from "express";
 import { forgotPassword, login, logOut, SignUp,verifyEmail,resetPassword,checkauth } from "../Controller/auth.controller.js";
-import { verifyToken } from "../../middleware/verifyToken.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 
 const router = e.Router();
