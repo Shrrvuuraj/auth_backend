@@ -3,6 +3,7 @@ import { animate, motion, scale } from "framer-motion";
 import { Mail, User ,Lock} from "lucide-react";
 import Input from "../components/Input";
 import {PaasWordCriteria,PasswordMeter} from "../components/Password";
+import { Link } from "react-router-dom";
 
 
 const SignUpPage = () => {
@@ -67,6 +68,9 @@ const SignUpPage = () => {
           Sign Up
         </motion.button>
       </form>
+      </div>
+      <div className="px-8 py-4 bg-gray-900 flex justify-center">
+        <p className="text-sm text-gray-400">Already have an account{' '} <Link to={"/login"} className="text-green-400 hover:underline">Login</Link></p>
       </div>
      
     </motion.div>
