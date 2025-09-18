@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -8,12 +8,50 @@ const VerificationEmail = () => {
   const navigate = useNavigate();
   const isLoading = false;
 
- 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const verificationCode = code.join("");
+    console.log(`Verification Code submitted : ${verificationCode}`);
+  };
+
+  const handleChange = (index, value) => {
+    const newCode = [...code];
+
+    // handle pasted content
+    if (value.length > 1) {
+      const pastedCode = value.slice(0, 6).split("");
+      for (let i = 0; i < 6; i++) {
+        newCode[i] = pastedCode[i] || "";
+      }
+      setCode(newCode);
+
+      const lastFilledIndex = newCode.findLastIndex((digit) => digit !== "");
+      if (lastFilledIndex !== -1) {
+        const focusIndex = lastFilledIndex < 5 ? lastFilledIndex + 1 : 5;
+        inputsref.current[focusIndex].focus();
+      }
+    } else {
+      newCode[index] = value;
+      setCode(newCode);
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !code[index] && index > 0) {
+      inputsref.current[index - 1].focus();
+    }
+  };
+
+  // auto submission when all fields are filled
+  useEffect(() => {
+    if (code.every((digit) => digit !== "")) {
+      handleSubmit(new Event("submit"));
+    }
+  }, [code]);
 
   return (
     <motion.div
-      className="max-w-md w-full bg-gray-800 bg-opacity-50
-    backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden p-8"
+      className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden p-8"
       animate={{ y: [0, 1], opacity: [0, 1] }}
       transition={{ duration: 0.5 }}
     >
@@ -21,7 +59,7 @@ const VerificationEmail = () => {
         Verify Your Email
       </h2>
       <p className="text-center mb-6 text-gray-300">verify your 6 digit code</p>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="flex justify-between">
           {code.map((digit, index) => (
             <input
