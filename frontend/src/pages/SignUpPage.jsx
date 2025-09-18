@@ -1,13 +1,25 @@
 import React, { useState } from "react";
 import { animate, motion, scale } from "framer-motion";
-import { Mail, User ,Lock} from "lucide-react";
+import { Mail, User ,Lock,Loader} from "lucide-react";
 import Input from "../components/Input";
 import {PaasWordCriteria,PasswordMeter} from "../components/Password";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 
 
 const SignUpPage = () => {
-  function handleSignUP() {}
+  const {signUp,error,isLoading} = useAuthStore()
+  const navigate=useNavigate()
+  async function handleSignUP (e) {
+    e.preventDefault()
+    try {
+      await signUp(email,password,name)
+      navigate("/verify-email")
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,7 +57,7 @@ const SignUpPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></Input>
-
+        {error&&<p className="text-red-500 font-semibold mt-2 ">{error}</p>}
         {/* password strength meter */}
       <div className=" flex flex-col">
         
@@ -64,8 +76,9 @@ const SignUpPage = () => {
         whileHover={{scale:1.02}}
         whileTap={{scale:0.98}}
         type="submit"
+        disabled={isLoading}
         >
-          Sign Up
+          {isLoading?<Loader className="w-6 h-6 mx-auto animate-spin"></Loader>:"Sign Up"}
         </motion.button>
       </form>
       </div>
