@@ -48,7 +48,7 @@ export const SignUp = async (req, res) => {
       user: { ...user._doc, password: undefined },
     });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 export const verifyEmail = async (req, res) => {
